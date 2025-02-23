@@ -66,7 +66,7 @@ namespace YATT
         {
             if (value is TorrentState state)
             {
-                return state == TorrentState.Paused;
+                return state == TorrentState.Paused || state == TorrentState.Stopped;
             }
             return false;
         }

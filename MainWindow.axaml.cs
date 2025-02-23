@@ -14,6 +14,8 @@ using System.IO;
 using System.Linq;
 using MonoTorrent.Client;
 using MonoTorrent;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace YATT
 {
@@ -74,7 +76,7 @@ namespace YATT
                 if (!string.IsNullOrWhiteSpace(saveDirectory))
                 {
                     // Start the torrent using the service
-                    var torrentManager = await _torrentManager.StartTorrentAsync(torrentFilePath, saveDirectory);
+                    var torrentManager = await _torrentManager.StartTorrentAsync(torrentFilePath, saveDirectory, true);
 
                     // Create a new TorrentView instance
                     var torrentView = new TorrentView(torrentManager);
@@ -134,6 +136,22 @@ namespace YATT
             settingsWindow.ShowDialog(this);
         }
 
+        private void OpenDirectoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.DataContext is TorrentView torrent)
+            {
+                var path = torrent.SavePath;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Process.Start("explorer.exe", path);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", path);
+                }
+            }
+        }
+
         // session
         public async Task SaveSessionAsync()
         {
@@ -147,7 +165,8 @@ namespace YATT
                 session.Torrents.Add(new TorrentSessionItem 
                 { 
                     TorrentFile = kvp.FileName, 
-                    SavePath = kvp.SavePath 
+                    SavePath = kvp.SavePath,
+                    State = kvp.Status
                 });
             }
             
@@ -164,7 +183,9 @@ namespace YATT
                 var session = System.Text.Json.JsonSerializer.Deserialize<SessionData>(json);
                 foreach (var item in session.Torrents)
                 {
-                    var torrentManager = await _torrentManager.StartTorrentAsync(item.TorrentFile, item.SavePath);
+                    var torrentManager = await _torrentManager.StartTorrentAsync(item.TorrentFile,
+                                                                                 item.SavePath,
+                                                                                 startOnAdd: item.State == TorrentState.Downloading);
                     var torrentView = new TorrentView(torrentManager);
                     torrentView.FileName = item.TorrentFile;
                     Torrents.Add(torrentView);

@@ -43,6 +43,7 @@
             <Button Content="Resume" Click="ResumeButton_Click"
                     IsVisible="{Binding Status, Converter={StaticResource ResumeButtonVisibilityConverter}}"/>
             <!-- <Button Content="Info"/> -->
+            <Button Content="Directory" Click="OpenDirectoryButton_Click"/>
             <Button Content="Delete" Click="DeleteButton_Click"/>
         </StackPanel>
       </StackPanel>

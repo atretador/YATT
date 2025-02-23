@@ -45,7 +45,7 @@ namespace YATT.Services
             InitializeEngine(kbSpeedLimit);
         }
 
-        public async Task<TorrentManager> StartTorrentAsync(string torrentFile, string savePath)
+        public async Task<TorrentManager> StartTorrentAsync(string torrentFile, string savePath, bool startOnAdd)
         {
             var torrent = Torrent.Load(torrentFile);
 
@@ -75,7 +75,10 @@ namespace YATT.Services
             }
 
             activeTorrents[torrent.Name] = manager;
-            await manager.StartAsync();
+
+            if(startOnAdd)
+                await manager.StartAsync();
+            
             return manager;
         }
 
@@ -84,7 +87,7 @@ namespace YATT.Services
             if (activeTorrents.ContainsKey(torrentName))
             {
                 var manager = activeTorrents[torrentName];
-                if (manager.State == TorrentState.Paused)
+                if (manager.State != TorrentState.Downloading)
                 {
                     await manager.StartAsync();
                 }
@@ -114,11 +117,6 @@ namespace YATT.Services
                 await manager.StopAsync();
                 await engine.RemoveAsync(manager);
                 
-                if (deleteFiles && Directory.Exists(manager.SavePath))
-                {
-                    Directory.Delete(manager.SavePath, true);
-                }
-                
                 File.Delete(GetFastResumeFilePath(torrentName));
                 activeTorrents.Remove(torrentName);
             }
@@ -134,18 +132,8 @@ namespace YATT.Services
             foreach (var kvp in activeTorrents)
             {
                 var manager = kvp.Value;
-                if (manager.Complete) continue;
-                
                 var fastResume = await manager.SaveFastResumeAsync();
                 File.WriteAllBytes(GetFastResumeFilePath(kvp.Key), fastResume.Encode());
-            }
-        }
-
-        public async Task LoadTorrentsOnStartupAsync(string torrentDirectory, string savePath)
-        {
-            foreach (var torrentFile in Directory.GetFiles(torrentDirectory, "*.torrent"))
-            {
-                await StartTorrentAsync(torrentFile, savePath);
             }
         }
 

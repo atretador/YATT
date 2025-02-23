@@ -14,7 +14,8 @@ namespace YATT
         public string FileName { get; set; }
         public string Name => _torrentManager.Torrent.Name;
         public string SavePath => _torrentManager.SavePath;
-        public double Progress => _torrentManager.Complete ? Math.Round(_torrentManager.Progress) : 100;  // Convert to percentage
+        public double Progress => _torrentManager.Complete ? 100 : Math.Round(_torrentManager.Progress);  // Convert to percentage
+        public bool Completed => _torrentManager.Complete;
 
         public double DownloadSpeed
         {
