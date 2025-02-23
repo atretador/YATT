@@ -3,6 +3,7 @@ Features
 
     Download torrents (duh).
     Set and enable different speed profiles.
+    Stores current session ( files being downloaded and their states)
 
 ## Installation
 
