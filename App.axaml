@@ -1,0 +1,26 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="YATT.App"
+             xmlns:local="clr-namespace:YATT"
+             RequestedThemeVariant="Default">
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Assets/icon.ico" ToolTipText="YATT">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Profile">
+                            <NativeMenu>
+                                <!-- Profile items will be added here programmatically -->
+                            </NativeMenu>
+                        </NativeMenuItem>
+                        <NativeMenuItem Header="Show" Command="{Binding ShowCommand, Source={x:Static local:App.Current}}" />
+                        <NativeMenuItem Header="Exit" Command="{Binding ExitCommand, Source={x:Static local:App.Current}}" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+</Application>
