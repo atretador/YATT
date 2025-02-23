@@ -76,9 +76,7 @@ namespace YATT.Services
 
             activeTorrents[torrent.Name] = manager;
 
-            if(startOnAdd)
-                await manager.StartAsync();
-            
+            await manager.HashCheckAsync(startOnAdd);
             return manager;
         }
 
