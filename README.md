@@ -6,6 +6,7 @@ YATT (Yet Another Torrent Thingy) is a lightweight torrent downloader built with
     Set and enable different speed profiles.
     Stores current session ( files being downloaded and their states)
     if the file is associated to the app: open file to load it / start up application on file open
+    Magnetic link support
 
 ## Installation
 
@@ -27,7 +28,7 @@ YATT (Yet Another Torrent Thingy) is a lightweight torrent downloader built with
 
 Missing:
 
-    Magnetic links
+    save metadata along with session so we don't have to download it again for megnet links
 
 Known bugs:
 
