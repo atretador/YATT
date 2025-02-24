@@ -33,3 +33,5 @@ Missing:
 Known bugs:
 
     Combo box for the profiles doesn't load the unit type properly.
+
+This was a quick for fun project and may contain bugs.
