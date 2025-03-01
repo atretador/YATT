@@ -74,8 +74,18 @@ namespace YATT
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = true; // Prevent the window from closing
-            this.Hide(); // Hide the window
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                e.Cancel = true; // Prevent the window from closing
+                this.Hide(); // Hide the window
+            }
+            else
+            {
+                if(Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
+                {
+                    desktopLifetime.Shutdown();
+                }
+            }
         }
 
         public async Task LoadFile(string filePath, string savePath, bool startOnAdd)
